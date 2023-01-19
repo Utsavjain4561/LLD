@@ -23,5 +23,13 @@ public class ExpenseManagerService {
         split.getGroup().setExpense(expense);
         return expense;
     }
+
+    public Boolean settleExpense(final Expense expense) {
+        expense.setSettledBills(expense.getSettledBills() + 1);
+        if (expense.getSettledBills() == expense.getBalances().size()) {
+            expense.setIsSettled(Boolean.TRUE);
+        }
+        return expense.getIsSettled();
+    }
 }
 

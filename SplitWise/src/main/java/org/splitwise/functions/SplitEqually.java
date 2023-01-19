@@ -5,9 +5,10 @@ import lombok.val;
 import org.splitwise.model.Balance;
 import org.splitwise.model.Expense;
 import org.splitwise.model.Split;
+import org.splitwise.model.User;
 
+import java.util.HashMap;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 
 public class SplitEqually implements Function<Split, Expense> {
@@ -17,9 +18,10 @@ public class SplitEqually implements Function<Split, Expense> {
         val users = split.getGroup().getUsers();
         val splitAmount = 1.0 * split.getAmount() / users.size();
         val userOwedTo = split.getOwedTo();
-        val balances = users.stream().map(user -> Balance.builder().amount(splitAmount)
-                .owedBy(user).owedTo(userOwedTo).build())
-                .collect(Collectors.toList());
+        val balances = new HashMap<User, Balance>();
+        users.stream().filter(user -> !user.equals(userOwedTo))
+                .forEach(user -> balances.put(user,
+                        Balance.builder().amount(splitAmount).owedBy(user).owedTo(userOwedTo).build()));
         return new Expense(split.getAmount(), balances);
     }
 }

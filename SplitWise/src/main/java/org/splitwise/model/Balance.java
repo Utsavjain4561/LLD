@@ -2,13 +2,16 @@ package org.splitwise.model;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Builder
 @Getter
 public class Balance {
     private final User owedBy;
     private final User owedTo;
-    private final Double amount;
+    @Setter
+    private Double amount;
     @Builder.Default
-    private final Boolean isSettled = Boolean.FALSE;
+    @Setter
+    private Boolean isSettled = Boolean.FALSE;
 }

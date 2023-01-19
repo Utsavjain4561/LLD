@@ -2,13 +2,19 @@ package org.splitwise.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Getter
 public class Expense {
     private final Double amount;
-    private final List<Balance> balances;
-    private final Boolean isSettled = Boolean.FALSE;
+    private final Map<User, Balance> balances;
+
+    @Setter
+    private Integer settledBills = 0;
+
+    @Setter
+    private Boolean isSettled = Boolean.FALSE;
 }

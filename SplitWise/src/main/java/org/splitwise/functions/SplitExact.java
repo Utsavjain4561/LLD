@@ -6,9 +6,10 @@ import lombok.val;
 import org.splitwise.model.Balance;
 import org.splitwise.model.Expense;
 import org.splitwise.model.Split;
+import org.splitwise.model.User;
 
+import java.util.HashMap;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class SplitExact implements Function<Split, Expense> {
@@ -22,10 +23,10 @@ public class SplitExact implements Function<Split, Expense> {
         if(!totalSum.equals(amount)) {
             throw new Exception("Amount to be split is not equal to individual contributions");
         }
-        val balances = splits.entrySet().stream()
-                .map(entry -> Balance.builder().owedBy(entry.getKey()).owedTo(userOwedTo)
-                        .amount(entry.getValue()).build())
-                .collect(Collectors.toList());
+        val balances = new HashMap<User, Balance>();
+        splits.entrySet().stream().filter(entry -> !entry.getKey().equals(userOwedTo))
+                .forEach(entry -> balances.put(entry.getKey(),
+                        Balance.builder().owedBy(entry.getKey()).owedTo(userOwedTo).amount(entry.getValue()).build()));
         return new Expense(amount, balances);
     }
 }
